@@ -2,7 +2,9 @@ package com.booking.menagment.mapper;
 
 import com.booking.menagment.model.dto.UserDTO;
 import com.booking.menagment.model.entity.User;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UserMapper extends AbstractMapper<User, UserDTO>{
 
     //unfinished

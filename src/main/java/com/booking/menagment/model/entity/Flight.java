@@ -3,7 +3,9 @@ package com.booking.menagment.model.entity;
 import com.booking.menagment.model.enums.FlightStatus;
 import jakarta.persistence.*;
 import jdk.jfr.ContentType;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import java.sql.Time;
@@ -11,8 +13,10 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
+@Table
 @Data
-@RequiredArgsConstructor
+@AllArgsConstructor(staticName = "build")
+@NoArgsConstructor
 public class Flight {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

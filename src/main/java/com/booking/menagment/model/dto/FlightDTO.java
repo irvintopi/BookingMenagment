@@ -2,6 +2,7 @@ package com.booking.menagment.model.dto;
 
 
 import com.booking.menagment.model.enums.FlightStatus;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import org.springframework.stereotype.Component;

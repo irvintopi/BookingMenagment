@@ -12,9 +12,10 @@ import java.util.List;
 
 @Data
 @Builder
-@AllArgsConstructor
+@AllArgsConstructor(staticName = "build")
 @NoArgsConstructor
 @Entity
+@Table
 public class User implements UserDetails {
 
     @Id

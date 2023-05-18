@@ -21,9 +21,9 @@ public Booking toEntity(BookingDTO bookingDTO) {
     @Override
     public BookingDTO toDto(Booking booking) {
         BookingDTO bookingDTO = new BookingDTO();
-        bookingDTO.setUserName(booking.getUser().getUsername());
-        bookingDTO.setBookingDate(booking.getBookingDate());
+        bookingDTO.setEmail(booking.getUser().getEmail());
         bookingDTO.setStatus(booking.getStatus());
+        bookingDTO.setBookingDate(booking.getBookingDate());
         List<FlightDTO> flightDTOs = booking.getFlights().stream()
                 .map(flightMapper::toDto)
                 .collect(Collectors.toList());

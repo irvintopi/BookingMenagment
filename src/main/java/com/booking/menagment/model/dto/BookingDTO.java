@@ -14,9 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class BookingDTO {
-    private String userName;
+    private String email;
     private BookingStatus status;
     private Date bookingDate;
     private List<FlightDTO> flights;
-    private List<Integer> flightIds;
 }

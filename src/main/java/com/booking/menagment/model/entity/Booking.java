@@ -12,6 +12,7 @@ import java.util.List;
 @Data
 @RequiredArgsConstructor
 @Entity
+@Table
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
