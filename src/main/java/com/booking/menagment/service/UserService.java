@@ -8,11 +8,9 @@ import java.util.List;
 
 public interface UserService {
     List<UserDTO> findAll();
-    /*User save(User u);
-    User update(Integer id, User updatedUser);
+    UserDTO findByEmail(String email);
+    User update(String email, User updatedUser);
+    void delete(String email);
+
     List<UserDTO> findUsersOnFlight(Integer flightId);
-    void delete(Integer id);
-    List<BookingDTO> findAllBookings(Integer id);
-    BookingDTO findBookingByIdAndUser(Integer bookingId, Integer id);
-    UserDTO findById(Integer id);*/
 }

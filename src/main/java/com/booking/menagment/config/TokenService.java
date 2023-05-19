@@ -50,7 +50,8 @@ public class TokenService {
     }
 
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        return claimsResolver.apply(extractAllClaims(token));
+        final Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
     }
 
     private Claims extractAllClaims(String token) {

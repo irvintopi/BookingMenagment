@@ -1,8 +1,11 @@
 package com.booking.menagment.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,35 +17,25 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfiguration {
     private final TokenFilter tokenFilter;
-
-    public SecurityConfiguration(TokenFilter tokenFilter) {
-        this.tokenFilter = tokenFilter;
-    }
+    private final AuthenticationProvider authenticationProvider;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.csrf().disable()
+        http
+                .csrf().disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/api/v1/auth/**").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
-    }
+                .and()
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
-            throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+                return http.build();
     }
 }

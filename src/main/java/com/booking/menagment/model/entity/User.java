@@ -12,9 +12,9 @@ import java.util.List;
 
 @Data
 @Builder
-@AllArgsConstructor(staticName = "build")
-@NoArgsConstructor
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table
 public class User implements UserDetails {
 
@@ -26,7 +26,7 @@ public class User implements UserDetails {
     @Column(name = "first_name", nullable = false)
     private String firstName;
     @Column(name = "middle_name")
-    private String middlename;
+    private String middleName;
     @Column(name = "last_name", nullable = false)
     private  String lastName;
     @Column(nullable = false, unique = true)

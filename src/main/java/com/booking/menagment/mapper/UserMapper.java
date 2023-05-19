@@ -18,6 +18,6 @@ public class UserMapper extends AbstractMapper<User, UserDTO>{
         if (u ==null){
             return null;
         }
-        return new UserDTO(u.getFirstName(),u.getMiddlename(), u.getLastName(), u.getRole().name() , u.getPhoneNumber(),u.getEmail(), u.getAddress());
+        return new UserDTO(u.getFirstName(),u.getMiddleName(), u.getLastName(), u.getRole().name() , u.getPhoneNumber(),u.getEmail(), u.getAddress());
     }
 }

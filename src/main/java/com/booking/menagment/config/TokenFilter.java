@@ -20,8 +20,8 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class TokenFilter extends OncePerRequestFilter {
 
-    private final UserDetailsService userDetailsService;
     private final TokenService tokenService;
+    private final UserDetailsService userDetailsService;
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
@@ -29,25 +29,28 @@ public class TokenFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
             final String authorizationHeader = request.getHeader("Authorization");
-            final String username;
-            final String token;
+            final String jwt;
+            final String userEmail;
 
-            if (authorizationHeader == null ||!authorizationHeader.startsWith("Bearer ")) {
-                filterChain.doFilter(request, response);
-                return;
-            }
+        if (authorizationHeader == null ||!authorizationHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-            token = authorizationHeader.substring(7);
-            username = tokenService.extractUsername(token);
+            jwt = authorizationHeader.substring(7);
+            userEmail = tokenService.extractUsername(jwt);
 
-            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                if (tokenService.isTokenValid(token, userDetails)) {
+            if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+                if (tokenService.isTokenValid(jwt, userDetails)) {
                     UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                             userDetails,
                             null,
-                            userDetails.getAuthorities());
-                    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                            userDetails.getAuthorities()
+                    );
+                    authenticationToken.setDetails(
+                            new WebAuthenticationDetailsSource().buildDetails(request)
+                    );
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);//update user token
                 }
             }
