@@ -37,5 +37,4 @@ public class Booking {
             inverseJoinColumns = @JoinColumn(name = "flight_id"))
     private List<Flight> flights;
 
-
 }

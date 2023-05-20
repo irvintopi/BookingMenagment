@@ -25,19 +25,26 @@ public class User implements UserDetails {
 
     @Column(name = "first_name", nullable = false)
     private String firstName;
+
     @Column(name = "middle_name")
     private String middleName;
+
     @Column(name = "last_name", nullable = false)
     private  String lastName;
+
     @Column(nullable = false, unique = true)
     private String email;
+
     @Column(name="phone_number", unique = true)
     private String phoneNumber;
+
     @Column
     private String address;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private RoleEnum role;
+
     @Column
     private String password;
 

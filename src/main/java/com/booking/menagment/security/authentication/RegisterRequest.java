@@ -1,4 +1,4 @@
-package com.booking.menagment.authentication;
+package com.booking.menagment.security.authentication;
 
 import com.booking.menagment.model.enums.RoleEnum;
 import lombok.AllArgsConstructor;

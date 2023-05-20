@@ -1,4 +1,4 @@
-package com.booking.menagment.config;
+package com.booking.menagment.security.config;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

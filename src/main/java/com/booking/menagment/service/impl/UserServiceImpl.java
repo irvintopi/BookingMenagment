@@ -7,8 +7,8 @@ import com.booking.menagment.model.entity.User;
 import com.booking.menagment.repository.UserRepository;
 import com.booking.menagment.service.BookingService;
 import com.booking.menagment.service.UserService;
+import com.booking.menagment.validators.MailValidator;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,12 +17,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
     private UserRepository repository;
     private UserMapper userMapper;
     private PasswordEncoder passwordEncoder;
     private BookingService bookingService;
+    private MailValidator mailValidator;
 
     @Override
     public List<UserDTO> findAll() {
@@ -32,14 +33,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO findByEmail(String email) {
         Optional<User> user = repository.findByEmail(email);
-        if (user.isPresent()) return userMapper.toDto(user.get());
-        else return null;
+        return user.map(value -> userMapper.toDto(value)).orElse(null);
     }
 
     @Override
     public User update(String email, User updatedUser) {
+        if (!mailValidator.isValidEmail(updatedUser.getEmail())) {
+            throw new IllegalArgumentException("Email is invalid or already in use!");
+        }
+
         User user = repository.findByEmail(email)
-                .orElseThrow(() -> new NoSuchElementException("User"));
+                .orElseThrow(() -> new NoSuchElementException("User does not exist!"));
 
         Integer userId= user.getId();
 

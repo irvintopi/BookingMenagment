@@ -1,4 +1,4 @@
-package com.booking.menagment.config;
+package com.booking.menagment.security.config;
 
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;

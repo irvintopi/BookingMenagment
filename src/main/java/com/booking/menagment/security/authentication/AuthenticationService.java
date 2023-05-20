@@ -1,22 +1,21 @@
-package com.booking.menagment.authentication;
+package com.booking.menagment.security.authentication;
 
+import com.booking.menagment.security.config.TokenService;
 import com.booking.menagment.model.entity.User;
-import com.booking.menagment.config.TokenService;
 import com.booking.menagment.repository.UserRepository;
+import com.booking.menagment.validators.MailValidator;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class AuthenticationService {
-    private final UserDetailsService userDetailsService;
+    private final MailValidator mailValidator;
     private final TokenService tokenService;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository repository;
@@ -40,7 +39,7 @@ public class AuthenticationService {
 
 
     public AuthenticationResponse register(RegisterRequest request) {
-        if (!isValidEmail(request.getEmail())) {
+        if (!mailValidator.isValidEmail(request.getEmail())) {
             throw new IllegalArgumentException("Email is invalid or already in use!");
         }
         User user1 = new User();
@@ -53,17 +52,5 @@ public class AuthenticationService {
         return AuthenticationResponse.builder()
                 .token(token)
                 .build();
-    }
-
-    private boolean isValidEmail(String email) {
-        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-        boolean isValidFormat = email.matches(emailRegex);
-
-        if (!isValidFormat) {
-            return false;
-        }
-
-        Optional<User> existingUser = repository.findByEmail(email);
-        return existingUser.isEmpty();
     }
 }

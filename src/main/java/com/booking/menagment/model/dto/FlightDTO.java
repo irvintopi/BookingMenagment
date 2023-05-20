@@ -2,7 +2,7 @@ package com.booking.menagment.model.dto;
 
 
 import com.booking.menagment.model.enums.FlightStatus;
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import org.springframework.stereotype.Component;
@@ -22,4 +22,8 @@ public class FlightDTO {
     private Time departureTime;
     private String aircraftType;
     private String flightNumber;
+    private Integer seatsEconomy = 0;
+    private Integer seatsPremiumEconomy = 0;
+    private Integer seatsBusiness = 0;
+    private Integer seatsFirstClass = 0;
 }

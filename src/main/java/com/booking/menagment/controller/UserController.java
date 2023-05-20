@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -35,9 +36,13 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(method = RequestMethod.PUT, value = "/{email}")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable String email, @RequestBody User updatedUser) {
-        User savedUser = userService.update(email, updatedUser);
-        return ResponseEntity.ok(userMapper.toDto(savedUser));
+    public ResponseEntity<?> updateUser(@PathVariable String email, @RequestBody User updatedUser) {
+        try {
+            User savedUser = userService.update(email, updatedUser);
+            return ResponseEntity.ok(userMapper.toDto(savedUser));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PreAuthorize("hasRole('ADMIN')")

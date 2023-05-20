@@ -1,6 +1,7 @@
 package com.booking.menagment.model.enums;
 
 public enum FlightStatus {
-    ACTIVE,
-    CANCELED
+    LANDED,
+    DELAYED,
+    ON_TIME
 }

@@ -19,7 +19,6 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<Booking> findByFlightId(Integer flightId) {
-        List<Booking> bookings = bookingRepository.findByFlights(flightService.findById(flightId).get());
-        return bookings;
+        return bookingRepository.findByFlights(flightService.findById(flightId).get());
     }
 }
