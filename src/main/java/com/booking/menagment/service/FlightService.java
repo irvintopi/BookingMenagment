@@ -9,5 +9,7 @@ public interface FlightService {
 
     Optional<Flight> findById(Integer id);
     FlightDTO save(FlightDTO flightDTO);
-    FlightDTO update(String flightNumber, FlightDTO flightDTO);
+    FlightDTO update(Integer flightId, FlightDTO flightDTO);
+
+    void delete(Integer id);
 }

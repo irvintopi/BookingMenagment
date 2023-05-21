@@ -45,8 +45,8 @@ public class FlightServiceImpl implements FlightService {
     }
 
     @Override
-    public FlightDTO update(String flightNumber, FlightDTO flightDTO) {
-        Flight existingFlight = flightRepository.findByFlightNumber(flightNumber)
+    public FlightDTO update(Integer flightID, FlightDTO flightDTO) {
+        Flight existingFlight = flightRepository.findById(flightID)
                 .orElseThrow(() -> new NoSuchElementException("Flight not found."));
 
         // Validate the updated flight DTO
@@ -69,6 +69,19 @@ public class FlightServiceImpl implements FlightService {
         flightRepository.save(existingFlight);
 
         return flightMapper.toDto(existingFlight);
+    }
+
+    @Override
+    public void delete(Integer flightId){
+        Flight flight = flightRepository.findById(flightId)
+                .orElseThrow(() -> new NoSuchElementException("Flight not found"));
+
+        List<Booking> bookings = bookingRepository.findByFlights(flight);
+        if (!bookings.isEmpty()) {
+            throw new IllegalStateException("Cannot delete a flight with existing bookings");
+        }
+
+        flightRepository.delete(flight);
     }
     private boolean isDepartureTimeUpdated(Flight existingFlight, FlightDTO flightDTO) {
         return !existingFlight.getDepartureTime().equals(flightDTO.getDepartureTime());

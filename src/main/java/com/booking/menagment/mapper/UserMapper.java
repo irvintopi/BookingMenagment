@@ -17,9 +17,8 @@ public class UserMapper extends AbstractMapper<User, UserDTO>{
     }
     @Override
     public UserDTO toDto(User u) {
-        if (u ==null){
-            return null;
-        }
-        return new UserDTO(u.getFirstName(),u.getMiddleName(), u.getLastName(), u.getRole().name() , u.getPhoneNumber(),u.getEmail(), u.getAddress());
+        UserDTO user = new UserDTO();
+        BeanUtils.copyProperties(u, user);
+        return user;
     }
 }

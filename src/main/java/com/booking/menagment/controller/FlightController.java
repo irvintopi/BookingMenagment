@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/v1/flights")
@@ -23,18 +24,30 @@ public class FlightController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(method = RequestMethod.GET, value ="/{flightId}")
-    public ResponseEntity<List<UserDTO>> getUsersOnFlight(@PathVariable Integer flightId){
-        return ResponseEntity.ok(userService.findUsersOnFlight(flightId));
+    public ResponseEntity<?> getUsersOnFlight(@PathVariable Integer flightId){
+        List<UserDTO> users = userService.findUsersOnFlight(flightId);
+        if (users.isEmpty()) throw new NoSuchElementException("No travelers on board at this time!");
+        else return ResponseEntity.ok(users);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> createFlight(@RequestBody FlightDTO flightDTO) {
-        try {
-            FlightDTO savedFlight = flightService.save(flightDTO);
-            return ResponseEntity.ok(savedFlight);
-        } catch (IllegalArgumentException ex) {
-            return ResponseEntity.badRequest().body(ex.getMessage());
-        }
+        FlightDTO savedFlight = flightService.save(flightDTO);
+        return ResponseEntity.ok(savedFlight);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @RequestMapping(method = RequestMethod.PUT, value = "/{flightId}")
+    public ResponseEntity<?> updateFlight(@PathVariable Integer flightId, @RequestBody FlightDTO flightDTO) {
+        flightService.update(flightId, flightDTO);
+        return ResponseEntity.ok().body(flightDTO);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+    public ResponseEntity<?> deleteFlight(@PathVariable Integer id) {
+        flightService.delete(id);
+        return ResponseEntity.ok(flightMapper.toDto(flightService.findById(id).get()));
+    }
 }

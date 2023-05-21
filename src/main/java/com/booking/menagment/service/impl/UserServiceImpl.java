@@ -8,6 +8,7 @@ import com.booking.menagment.repository.UserRepository;
 import com.booking.menagment.service.BookingService;
 import com.booking.menagment.service.UserService;
 import com.booking.menagment.validators.MailValidator;
+import com.booking.menagment.validators.UserValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,31 +20,32 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
-    private UserRepository repository;
+    private UserRepository userRepository;
     private UserMapper userMapper;
+    private UserValidator userValidator;
     private PasswordEncoder passwordEncoder;
     private BookingService bookingService;
     private MailValidator mailValidator;
 
     @Override
     public List<UserDTO> findAll() {
-        return repository.findAll().stream().map(userMapper::toDto).collect(Collectors.toList());
+        return userRepository.findAll().stream().map(userMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
     public UserDTO findByEmail(String email) {
-        Optional<User> user = repository.findByEmail(email);
+        Optional<User> user = userRepository.findByEmail(email);
         return user.map(value -> userMapper.toDto(value)).orElse(null);
     }
 
     @Override
     public User update(String email, User updatedUser) {
-        if (!mailValidator.isValidEmail(updatedUser.getEmail())) {
-            throw new IllegalArgumentException("Email is invalid or already in use!");
-        }
-
-        User user = repository.findByEmail(email)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NoSuchElementException("User does not exist!"));
+
+        UserDTO userDTO = userMapper.toDto(updatedUser);
+        userValidator.validateUser(userDTO);
+
 
         Integer userId= user.getId();
 
@@ -53,12 +55,12 @@ public class UserServiceImpl implements UserService {
 
         user.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
 
-        return repository.save(user);
+        return userRepository.save(user);
     }
 
     @Override
     public void delete(String email) {
-        repository.delete(repository.findByEmail(email).get());
+        userRepository.delete(userRepository.findByEmail(email).get());
     }
 
     @Override
@@ -67,7 +69,7 @@ public class UserServiceImpl implements UserService {
 
         return bookings.stream()
                 .map(booking -> {
-                    User user = repository.findById(booking.getUser().getId()).orElse(null);
+                    User user = userRepository.findById(booking.getUser().getId()).orElse(null);
                     return user != null ? userMapper.toDto(user) : null;
                 })
                 .filter(Objects::nonNull)

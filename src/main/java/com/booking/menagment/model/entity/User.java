@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -31,6 +32,9 @@ public class User implements UserDetails {
 
     @Column(name = "last_name", nullable = false)
     private  String lastName;
+
+    @Column(name = "birthday", nullable = false)
+    private Date birthday;
 
     @Column(nullable = false, unique = true)
     private String email;

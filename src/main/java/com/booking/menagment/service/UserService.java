@@ -11,6 +11,5 @@ public interface UserService {
     UserDTO findByEmail(String email);
     User update(String email, User updatedUser);
     void delete(String email);
-
     List<UserDTO> findUsersOnFlight(Integer flightId);
 }
