@@ -1,6 +1,7 @@
 package com.booking.menagment.model.entity;
 
 import com.booking.menagment.model.enums.BookingStatus;
+import com.booking.menagment.model.enums.FlightClass;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,10 @@ public class Booking {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private BookingStatus status;
+
+    @Column(name = "flight_class", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private FlightClass flightClass;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

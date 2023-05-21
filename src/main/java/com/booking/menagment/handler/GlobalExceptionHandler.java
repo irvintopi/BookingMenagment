@@ -26,9 +26,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(404).body(ex.getMessage());
     }
 
-    @ExceptionHandler
+   /* @ExceptionHandler
     public ResponseEntity<String> handleNullPointerException(NullPointerException ex){
         return ResponseEntity.badRequest().body("Check your input, missing required data!");
-    }
+    }*/
 
 }

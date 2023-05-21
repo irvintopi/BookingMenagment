@@ -7,7 +7,6 @@ import com.booking.menagment.model.entity.User;
 import com.booking.menagment.repository.UserRepository;
 import com.booking.menagment.service.BookingService;
 import com.booking.menagment.service.UserService;
-import com.booking.menagment.validators.MailValidator;
 import com.booking.menagment.validators.UserValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -25,7 +24,6 @@ public class UserServiceImpl implements UserService {
     private UserValidator userValidator;
     private PasswordEncoder passwordEncoder;
     private BookingService bookingService;
-    private MailValidator mailValidator;
 
     @Override
     public List<UserDTO> findAll() {

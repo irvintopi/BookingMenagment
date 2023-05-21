@@ -1,5 +1,6 @@
 package com.booking.menagment.model.entity;
 
+import com.booking.menagment.model.enums.FlightClass;
 import com.booking.menagment.model.enums.FlightStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -55,7 +56,7 @@ public class Flight {
     @Column(name = "seats_business")
     private Integer seatsBusiness;
 
-    @Column(name = "seats_first_class", columnDefinition = "integer default 0")
+    @Column(name = "seats_first_class")
     private Integer seatsFirstClass;
 
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "flights")

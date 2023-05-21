@@ -3,6 +3,7 @@ package com.booking.menagment.mapper;
 import com.booking.menagment.model.dto.BookingDTO;
 import com.booking.menagment.model.dto.FlightDTO;
 import com.booking.menagment.model.entity.Booking;
+import com.booking.menagment.model.entity.Flight;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -26,10 +27,11 @@ public class BookingMapper extends AbstractMapper<Booking, BookingDTO>{
         bookingDTO.setEmail(booking.getUser().getEmail());
         bookingDTO.setStatus(booking.getStatus());
         bookingDTO.setBookingDate(booking.getBookingDate());
-        List<FlightDTO> flightDTOs = booking.getFlights().stream()
-                .map(flightMapper::toDto)
+        List<Integer> flightIds = booking.getFlights().stream()
+                .map(Flight::getId)
                 .collect(Collectors.toList());
-        bookingDTO.setFlights(flightDTOs);
+        bookingDTO.setFlightIds(flightIds);
+        bookingDTO.setFlightClass(booking.getFlightClass());
         return bookingDTO;
     }
 }
