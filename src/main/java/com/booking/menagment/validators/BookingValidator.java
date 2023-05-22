@@ -43,7 +43,43 @@ public class BookingValidator {
                 if (departureDate.before(currentDate)) {
                     throw new IllegalArgumentException("Flight with ID " + flightId + " has already departed");
                 }
-            }
+
+            //deduction logic
+                List<Integer> flightIdList = bookingDTO.getFlightIds();
+                for (Integer flightId1 : flightIdList) {
+                    Flight flight1 = flightRepository.findById(flightId1)
+                            .orElseThrow(() -> new IllegalArgumentException("Invalid flight ID: " + flightId1));
+
+                    switch (bookingDTO.getFlightClass().name()) {
+                        case "ECONOMY":
+                            if (flight1.getSeatsEconomy() <= 0) {
+                                throw new IllegalArgumentException("No available economy seats for flight with ID " + flightId);
+                            }
+                            flight1.setSeatsEconomy(flight1.getSeatsEconomy() - 1);
+                            break;
+                        case "BUSINESS":
+                            if (flight1.getSeatsBusiness() <= 0) {
+                                throw new IllegalArgumentException("No available business seats for flight with ID " + flightId);
+                            }
+                            flight1.setSeatsBusiness(flight1.getSeatsBusiness() - 1);
+                            break;
+                        case "FIRSTCLASS":
+                            if (flight1.getSeatsFirstClass() <= 0) {
+                                throw new IllegalArgumentException("No available first class seats for flight with ID " + flightId);
+                            }
+                            flight1.setSeatsFirstClass(flight1.getSeatsFirstClass() - 1);
+                            break;
+                        case "ECONOMYPREMIUM":
+                            if (flight1.getSeatsPremiumEconomy() <= 0) {
+                                throw new IllegalArgumentException("No available premium economy seats for flight with ID " + flightId);
+                            }
+                            flight1.setSeatsPremiumEconomy(flight1.getSeatsPremiumEconomy() - 1);
+                            break;
+                        default:
+                            throw new IllegalArgumentException("Invalid flight class: " + bookingDTO.getFlightClass().name());
+                    }
+                }
         }
     }
+}
 

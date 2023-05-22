@@ -7,6 +7,7 @@ import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.sql.SQLException;
 import java.util.NoSuchElementException;
 
 @RestControllerAdvice
@@ -26,9 +27,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(404).body(ex.getMessage());
     }
 
-   /* @ExceptionHandler
+    @ExceptionHandler
     public ResponseEntity<String> handleNullPointerException(NullPointerException ex){
         return ResponseEntity.badRequest().body("Check your input, missing required data!");
-    }*/
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<String> handleSqlException(SQLException s) {
+        return ResponseEntity.ok().body("All okay!:)");
+    }
 
 }

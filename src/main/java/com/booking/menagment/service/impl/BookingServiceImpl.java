@@ -33,15 +33,8 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public BookingDTO saveBooking(BookingDTO bookingDTO){
             bookingValidator.validate(bookingDTO);
-            Booking booking = new Booking();
-
-            booking.setUser(userRepository.findByEmail(bookingDTO.getEmail()).get());
-            booking.setBookingDate(bookingDTO.getBookingDate());
-            booking.setFlights(flightRepository.findAllById(bookingDTO.getFlightIds()));
-            booking.setFlightClass(bookingDTO.getFlightClass());
-            booking.setStatus(bookingDTO.getStatus());
+            Booking booking = bookingMapper.toEntity(bookingDTO);
             bookingRepository.save(booking);
-
-            return bookingMapper.toDto(booking);
+            return bookingDTO;
     }
 }

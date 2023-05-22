@@ -4,6 +4,7 @@ import com.booking.menagment.model.enums.BookingStatus;
 import com.booking.menagment.model.enums.FlightClass;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Generated;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Date;
