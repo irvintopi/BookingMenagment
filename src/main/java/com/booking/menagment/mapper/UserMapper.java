@@ -19,6 +19,7 @@ public class UserMapper extends AbstractMapper<User, UserDTO>{
     public UserDTO toDto(User u) {
         UserDTO user = new UserDTO();
         BeanUtils.copyProperties(u, user);
+        user.setRole(u.getRole().name());
         return user;
     }
 }

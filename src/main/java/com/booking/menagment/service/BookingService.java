@@ -10,4 +10,6 @@ public interface BookingService {
     List<Booking> findByFlightId(Integer flightId);
 
     BookingDTO saveBooking(BookingDTO bookingDTO);
+
+    List<BookingDTO> getBookingsByEmail(String email);
 }

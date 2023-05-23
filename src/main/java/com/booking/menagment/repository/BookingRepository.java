@@ -11,4 +11,8 @@ import java.util.List;
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Integer> {
     List<Booking> findByFlights(Flight flight);
+
+    Booking findByUserAndFlights(User user, Flight flight);
+
+    List<Booking> findByUser(User user);
 }

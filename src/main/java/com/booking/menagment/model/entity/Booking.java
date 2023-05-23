@@ -32,6 +32,9 @@ public class Booking {
     @Enumerated(EnumType.STRING)
     private FlightClass flightClass;
 
+    @Column(name = "seats_booked")
+    private Integer seatsBooked;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

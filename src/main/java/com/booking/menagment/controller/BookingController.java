@@ -15,13 +15,14 @@ import java.sql.SQLException;
 public class BookingController {
     private BookingService bookingService;
 
-    @GetMapping
-    public ResponseEntity<?> hello() {
-        return ResponseEntity.ok("Hello");
-    }
-    @PostMapping
+    @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> createBooking(@RequestBody BookingDTO bookingDTO) {
             bookingService.saveBooking(bookingDTO);
             return ResponseEntity.ok(bookingDTO);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/{email}")
+    public ResponseEntity<?> getAllBookingsOfUser(@PathVariable String email) {
+        return ResponseEntity.ok(bookingService.getBookingsByEmail(email));
     }
 }

@@ -25,6 +25,7 @@ public class BookingMapper extends AbstractMapper<Booking, BookingDTO>{
         booking.setBookingDate(bookingDTO.getBookingDate());
         booking.setStatus(bookingDTO.getStatus());
         booking.setFlightClass(bookingDTO.getFlightClass());
+        booking.setSeatsBooked(bookingDTO.getSeatsBooked());
         booking.setUser(userRepository.findByEmail(bookingDTO.getEmail()).get());
         List<Flight> flights = flightRepository.findAllById(bookingDTO.getFlightIds());
         booking.setFlights(flights);
