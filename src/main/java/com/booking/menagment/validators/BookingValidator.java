@@ -73,35 +73,64 @@ public class BookingValidator {
             }
 
             // Deduction logic for seat class
+            if (isFlightFullyBooked(flight)) {
+                throw new IllegalArgumentException("Flight with ID " + flightId + " is fully booked.");
+            }
+
+            String availableClasses = getAvailableClasses(flight, bookingDTO);
+
             switch (bookingDTO.getFlightClass().name()) {
-                case "ECONOMY" -> {
+                case "ECONOMY":
                     if (flight.getSeatsEconomy() < bookingDTO.getSeatsBooked()) {
-                        throw new IllegalArgumentException("Not enough available economy seats for flight with ID " + flightId);
+                        throw new IllegalArgumentException("Not enough available economy seats for flight with ID " + flightId + ". Available classes: " + availableClasses);
                     }
                     flight.setSeatsEconomy(flight.getSeatsEconomy() - bookingDTO.getSeatsBooked());
-                }
-                case "BUSINESS" -> {
+                    break;
+                case "BUSINESS":
                     if (flight.getSeatsBusiness() < bookingDTO.getSeatsBooked()) {
-                        throw new IllegalArgumentException("Not enough available business seats for flight with ID " + flightId);
+                        throw new IllegalArgumentException("Not enough available business seats for flight with ID " + flightId + ". Available classes: " + availableClasses);
                     }
                     flight.setSeatsBusiness(flight.getSeatsBusiness() - bookingDTO.getSeatsBooked());
-                }
-                case "FIRSTCLASS" -> {
+                    break;
+                case "FIRSTCLASS":
                     if (flight.getSeatsFirstClass() < bookingDTO.getSeatsBooked()) {
-                        throw new IllegalArgumentException("Not enough available first class seats for flight with ID " + flightId);
+                        throw new IllegalArgumentException("Not enough available first class seats for flight with ID " + flightId + ". Available classes: " + availableClasses);
                     }
                     flight.setSeatsFirstClass(flight.getSeatsFirstClass() - bookingDTO.getSeatsBooked());
-                }
-                case "ECONOMYPREMIUM" -> {
+                    break;
+                case "ECONOMYPREMIUM":
                     if (flight.getSeatsPremiumEconomy() < bookingDTO.getSeatsBooked()) {
-                        throw new IllegalArgumentException("Not enough available premium economy seats for flight with ID " + flightId);
+                        throw new IllegalArgumentException("Not enough available premium economy seats for flight with ID " + flightId + ". Available classes: " + availableClasses);
                     }
                     flight.setSeatsPremiumEconomy(flight.getSeatsPremiumEconomy() - bookingDTO.getSeatsBooked());
-                }
-                default ->
-                        throw new IllegalArgumentException("Invalid flight class: " + bookingDTO.getFlightClass().name());
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid flight class: " + bookingDTO.getFlightClass().name());
             }
         }
+    }
+    // Helper method to check if the flight is fully booked
+    private boolean isFlightFullyBooked(Flight flight) {
+        return flight.getSeatsEconomy() == 0 && flight.getSeatsBusiness() == 0 &&
+                flight.getSeatsFirstClass() == 0 && flight.getSeatsPremiumEconomy() == 0;
+    }
+
+    // Helper method to get the available classes for booking
+    private String getAvailableClasses(Flight flight, BookingDTO bookingDTO) {
+        StringBuilder classes = new StringBuilder();
+        if (flight.getSeatsEconomy() >= bookingDTO.getSeatsBooked()) {
+            classes.append("ECONOMY, ");
+        }
+        if (flight.getSeatsBusiness() >= bookingDTO.getSeatsBooked()) {
+            classes.append("BUSINESS, ");
+        }
+        if (flight.getSeatsFirstClass() >= bookingDTO.getSeatsBooked()) {
+            classes.append("FIRSTCLASS, ");
+        }
+        if (flight.getSeatsPremiumEconomy() >= bookingDTO.getSeatsBooked()) {
+            classes.append("ECONOMYPREMIUM, ");
+        }
+        return classes.substring(0, classes.length() - 2);
     }
 }
 

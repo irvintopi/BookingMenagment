@@ -3,7 +3,7 @@ package com.booking.menagment.validators;
 import com.booking.menagment.model.dto.CancellationRequestDTO;
 import com.booking.menagment.model.entity.Booking;
 import com.booking.menagment.model.entity.BookingCancellation;
-import com.booking.menagment.model.enums.CancellationStatus;
+import com.booking.menagment.model.enums.CancellationStatusEnum;
 import com.booking.menagment.repository.BookingCancellationRepository;
 import com.booking.menagment.repository.BookingRepository;
 import lombok.AllArgsConstructor;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Optional;
 
 @Component
 @AllArgsConstructor
@@ -34,9 +35,9 @@ public class CancellationRequestValidator {
         }
 
         // Check if there is an existing declined or approved cancellation request for the booking
-        BookingCancellation existingCancellation = cancellationRepository.findByBookingIdAndStatusIn(requestDTO.getBookingId(), Arrays.asList(CancellationStatus.APPROVED, CancellationStatus.DECLINED, CancellationStatus.PENDING));
-        if (existingCancellation != null) {
-            throw new IllegalArgumentException("There is already a cancellation request for this booking with status: " + existingCancellation.getStatus().name() +", contact support for help.");
+        Optional<BookingCancellation> existingCancellation = cancellationRepository.findByBookingIdAndStatusIn(requestDTO.getBookingId(), Arrays.asList(CancellationStatusEnum.APPROVED, CancellationStatusEnum.DECLINED, CancellationStatusEnum.PENDING));
+        if (existingCancellation.isPresent()) {
+            throw new IllegalArgumentException("There is already a cancellation request for this booking with status: " + existingCancellation.get().getStatus().name() +", contact support for help.");
         }
     }
 }

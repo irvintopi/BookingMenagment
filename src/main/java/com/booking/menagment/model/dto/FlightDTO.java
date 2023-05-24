@@ -3,8 +3,10 @@ package com.booking.menagment.model.dto;
 
 import com.booking.menagment.model.enums.FlightStatus;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.sql.Time;
@@ -13,6 +15,8 @@ import java.util.Date;
 
 @Component
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class FlightDTO {
     private String airline;
     private String origin;

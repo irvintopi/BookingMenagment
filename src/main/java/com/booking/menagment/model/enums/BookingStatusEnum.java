@@ -1,6 +1,6 @@
 package com.booking.menagment.model.enums;
 
-public enum BookingStatus {
+public enum BookingStatusEnum {
     ACTIVE,
     CANCELED
 }

@@ -1,6 +1,6 @@
 package com.booking.menagment.model.enums;
 
-public enum CancellationStatus {
+public enum CancellationStatusEnum {
     PENDING,
     APPROVED,
     DECLINED

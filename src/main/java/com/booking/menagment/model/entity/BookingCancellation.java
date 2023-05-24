@@ -1,6 +1,6 @@
 package com.booking.menagment.model.entity;
 
-import com.booking.menagment.model.enums.CancellationStatus;
+import com.booking.menagment.model.enums.CancellationStatusEnum;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,7 +17,7 @@ public class BookingCancellation {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private CancellationStatus status;
+    private CancellationStatusEnum status;
 
     @Column(name = "decline_reason")
     private String declineReason;

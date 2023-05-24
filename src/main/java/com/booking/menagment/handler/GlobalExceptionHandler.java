@@ -33,9 +33,4 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body("Check your input, missing required data!");
     }*/
 
-    @ExceptionHandler
-    public ResponseEntity<String> handleSqlException(SQLException s) {
-        return ResponseEntity.ok().body("All okay!:)");
-    }
-
 }

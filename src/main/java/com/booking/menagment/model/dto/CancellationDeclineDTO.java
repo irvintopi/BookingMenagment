@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CancellationRequestDTO {
-    String email;
-    Integer bookingId;
+public class CancellationDeclineDTO {
+    private Integer cancellationId;
+    private String reason;
 }

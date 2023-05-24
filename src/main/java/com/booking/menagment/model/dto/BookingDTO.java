@@ -1,7 +1,6 @@
 package com.booking.menagment.model.dto;
 
-import com.booking.menagment.model.entity.Flight;
-import com.booking.menagment.model.enums.BookingStatus;
+import com.booking.menagment.model.enums.BookingStatusEnum;
 import com.booking.menagment.model.enums.FlightClass;
 import jakarta.ws.rs.DefaultValue;
 import lombok.AllArgsConstructor;
@@ -18,7 +17,7 @@ import java.util.List;
 @Data
 public class BookingDTO {
     private String email;
-    private BookingStatus status;
+    private BookingStatusEnum status;
     private Date bookingDate;
     private FlightClass flightClass;
     @DefaultValue("1")

@@ -1,10 +1,9 @@
 package com.booking.menagment.model.entity;
 
-import com.booking.menagment.model.enums.BookingStatus;
+import com.booking.menagment.model.enums.BookingStatusEnum;
 import com.booking.menagment.model.enums.FlightClass;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Generated;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Date;
@@ -26,7 +25,7 @@ public class Booking {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private BookingStatus status;
+    private BookingStatusEnum status;
 
     @Column(name = "flight_class", nullable = false)
     @Enumerated(EnumType.STRING)
