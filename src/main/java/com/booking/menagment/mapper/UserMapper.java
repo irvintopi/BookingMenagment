@@ -8,18 +8,20 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserMapper extends AbstractMapper<User, UserDTO>{
 
-    //unfinished
+    // Unfinished
     @Override
     public User toEntity(UserDTO userDTO) {
         User user = new User();
         BeanUtils.copyProperties(userDTO , user);
         return user;
     }
+
     @Override
     public UserDTO toDto(User u) {
         UserDTO user = new UserDTO();
         BeanUtils.copyProperties(u, user);
         user.setRole(u.getRole().name());
         return user;
+
     }
 }

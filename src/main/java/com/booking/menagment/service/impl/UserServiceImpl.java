@@ -10,6 +10,7 @@ import com.booking.menagment.service.UserService;
 import com.booking.menagment.validators.UserValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDTO> findAll() {
-        return userRepository.findAll().stream().map(userMapper::toDto).collect(Collectors.toList());
+
+        return userRepository.findAll().stream()
+                .map(userMapper::toDto).sorted(Comparator.comparing(UserDTO::getFirstName)).collect(Collectors.toList());
     }
 
     @Override
@@ -41,24 +44,63 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NoSuchElementException("User does not exist!"));
 
-        UserDTO userDTO = userMapper.toDto(updatedUser);
-        userValidator.validateUser(userDTO);
 
+        Integer userId = user.getId();
 
-        Integer userId= user.getId();
+        if (updatedUser.getPassword() != null) {
+            user.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+        }
 
-        BeanUtils.copyProperties(updatedUser, user);
+        if (updatedUser.getFirstName() != null) {
+            user.setFirstName(updatedUser.getFirstName());
+        }
+
+        if (updatedUser.getLastName() != null) {
+            user.setLastName(updatedUser.getLastName());
+        }
+
+        if (updatedUser.getMiddleName() != null) {
+            user.setMiddleName(updatedUser.getMiddleName());
+        }
+
+        if (updatedUser.getEmail() != null) {
+            user.setEmail(updatedUser.getEmail());
+        }
+
+        if (updatedUser.getAddress() != null) {
+            user.setAddress(updatedUser.getAddress());
+        }
+
+        if (updatedUser.getPhoneNumber() != null) {
+            user.setPhoneNumber(updatedUser.getPhoneNumber());
+        }
+
+        if (updatedUser.getBirthday() != null) {
+            user.setBirthday(updatedUser.getBirthday());
+        }
+
+        if (updatedUser.getRole() != null) {
+            user.setRole(updatedUser.getRole());
+        }
 
         user.setId(userId);
-
-        user.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
 
         return userRepository.save(user);
     }
 
     @Override
-    public void delete(String email) {
-        userRepository.delete(userRepository.findByEmail(email).get());
+    public ResponseEntity<String> delete(String email) {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+
+        if (userOptional.isPresent() && !userOptional.get().getRole().name().equals("ADMIN")) {
+            User user = userOptional.get();
+            userRepository.delete(user);
+
+            return ResponseEntity.ok("User deleted successfully.");
+        } else {
+
+            return ResponseEntity.badRequest().body("Cannot perform account deletion, email does not exist or can't be deleted.");
+        }
     }
 
     @Override

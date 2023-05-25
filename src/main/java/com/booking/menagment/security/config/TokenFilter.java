@@ -37,12 +37,16 @@ public class TokenFilter extends OncePerRequestFilter {
             return;
         }
 
-            jwt = authorizationHeader.substring(7);
-            userEmail = tokenService.extractUsername(jwt);
 
-            if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        jwt = authorizationHeader.substring(7);
+
+        userEmail = tokenService.extractUsername(jwt);
+
+
+        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                  UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
-                if (tokenService.isTokenValid(jwt, userDetails)) {
+
+                 if (tokenService.isTokenValid(jwt, userDetails)) {
                     UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                             userDetails,
                             null,

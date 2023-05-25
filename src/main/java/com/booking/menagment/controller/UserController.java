@@ -42,11 +42,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(method = RequestMethod.DELETE, value = "/{email}")
-    public ResponseEntity<UserDTO> deleteUser(@PathVariable String email) {
-        UserDTO userDTO = userService.findByEmail(email);
-        if(userDTO != null){
-            userService.delete(email);
-            return ResponseEntity.ok(userDTO);
-        }else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> deleteUser(@PathVariable String email) {
+       return ResponseEntity.ok(userService.delete(email));
     }
 }
