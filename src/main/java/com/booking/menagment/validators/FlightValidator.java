@@ -3,6 +3,7 @@ package com.booking.menagment.validators;
 import com.booking.menagment.model.dto.FlightDTO;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -12,8 +13,13 @@ public class FlightValidator {
         String airlineCode = flightDTO.getAirline();
         String flightNumber = flightDTO.getFlightNumber();
 
+        //airline code
+        if (!Arrays.asList("LH", "OS", "LX", "EW").contains(airlineCode)) {
+            throw new IllegalArgumentException("Invalid airline code. Allowed airline codes are LH, OS, LX, EW.");
+        }
+
         validateFutureDate(flightDTO.getFlightDate());
-        validateFutureTime(flightDTO.getFlightDate(), flightDTO.getDepartureTime(), "Departure time must be in the future.");
+        validateFutureTime(flightDTO.getFlightDate(), flightDTO.getDepartureTime());
 
         if (!flightNumber.matches("^" + airlineCode + "\\d{3}$")) {
             throw new IllegalArgumentException("Invalid flight number format. Flight number should start with the airline code followed by three numbers.");
@@ -35,12 +41,12 @@ public class FlightValidator {
         }
     }
 
-    private void validateFutureTime(Date date, Date time, String errorMessage) {
+    private void validateFutureTime(Date date, Date time) {
         Date currentDateTime = new Date();
         Date bookingDateTime = mergeDateAndTime(date, time);
 
         if (bookingDateTime.before(currentDateTime)) {
-            throw new IllegalArgumentException(errorMessage);
+            throw new IllegalArgumentException("Departure time must be in the future.");
         }
     }
 

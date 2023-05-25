@@ -4,6 +4,7 @@ import com.booking.menagment.model.dto.BookingDTO;
 import com.booking.menagment.service.BookingService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,6 +19,7 @@ public class BookingController {
             return ResponseEntity.ok(bookingDTO);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(method = RequestMethod.GET, value = "/{email}")
     public ResponseEntity<?> getAllBookingsOfUser(@PathVariable String email) {
         return ResponseEntity.ok(bookingService.getBookingsByEmail(email));

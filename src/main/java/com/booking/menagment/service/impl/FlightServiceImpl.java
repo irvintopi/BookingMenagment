@@ -54,7 +54,7 @@ public class FlightServiceImpl implements FlightService {
 
         // Check if any traveler has booked the flight
         List<Booking> bookings = bookingRepository.findByFlights(existingFlight);
-        if (!bookings.isEmpty() && !isDepartureTimeUpdated(existingFlight, flightDTO)) {
+        if (!bookings.isEmpty()) {
             throw new IllegalArgumentException("Flight has been booked by travelers. Only departure time can be updated.");
         }
 
@@ -78,7 +78,7 @@ public class FlightServiceImpl implements FlightService {
 
         List<Booking> bookings = bookingRepository.findByFlights(flight);
         if (!bookings.isEmpty()) {
-            throw new IllegalStateException("Cannot delete a flight with existing bookings");
+            throw new IllegalArgumentException("Cannot delete a flight with existing bookings");
         }
 
         flightRepository.delete(flight);

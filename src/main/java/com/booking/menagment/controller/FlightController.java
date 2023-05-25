@@ -15,6 +15,7 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/v1/flights")
+@PreAuthorize("hasRole('ADMIN')")
 @AllArgsConstructor
 public class FlightController {
 
@@ -22,7 +23,6 @@ public class FlightController {
     FlightService flightService;
     FlightMapper flightMapper;
 
-    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(method = RequestMethod.GET, value ="/{flightId}")
     public ResponseEntity<?> getUsersOnFlight(@PathVariable Integer flightId){
         List<UserDTO> users = userService.findUsersOnFlight(flightId);
@@ -30,24 +30,21 @@ public class FlightController {
         else return ResponseEntity.ok(users);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> createFlight(@RequestBody FlightDTO flightDTO) {
         FlightDTO savedFlight = flightService.save(flightDTO);
         return ResponseEntity.ok(savedFlight);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(method = RequestMethod.PUT, value = "/{flightId}")
     public ResponseEntity<?> updateFlight(@PathVariable Integer flightId, @RequestBody FlightDTO flightDTO) {
         flightService.update(flightId, flightDTO);
         return ResponseEntity.ok().body(flightDTO);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
     public ResponseEntity<?> deleteFlight(@PathVariable Integer id) {
         flightService.delete(id);
-        return ResponseEntity.ok(flightMapper.toDto(flightService.findById(id).get()));
+        return ResponseEntity.ok("Deleted flight Successfully");
     }
 }

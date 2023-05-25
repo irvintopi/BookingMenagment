@@ -1,5 +1,6 @@
 package com.booking.menagment.model.entity;
 
+import com.booking.menagment.model.enums.AirlineEnum;
 import com.booking.menagment.model.enums.FlightClass;
 import com.booking.menagment.model.enums.FlightStatus;
 import jakarta.persistence.*;
@@ -23,7 +24,8 @@ public class Flight {
     private Integer id;
 
     @Column(nullable = false)
-    private String airline;
+    @Enumerated(EnumType.STRING)
+    private AirlineEnum airline;
 
     @Column(name = "flight_number", nullable = false)
     private String flightNumber;

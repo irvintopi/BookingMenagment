@@ -4,6 +4,7 @@ import com.booking.menagment.mapper.UserMapper;
 import com.booking.menagment.model.dto.UserDTO;
 import com.booking.menagment.model.entity.Booking;
 import com.booking.menagment.model.entity.User;
+import com.booking.menagment.model.enums.BookingStatusEnum;
 import com.booking.menagment.repository.UserRepository;
 import com.booking.menagment.service.BookingService;
 import com.booking.menagment.service.UserService;
@@ -108,6 +109,7 @@ public class UserServiceImpl implements UserService {
         List<Booking> bookings = bookingService.findByFlightId(flightId);
 
         return bookings.stream()
+                .filter(booking -> !BookingStatusEnum.CANCELED.equals(booking.getStatus())) // Filter out canceled bookings
                 .map(booking -> {
                     User user = userRepository.findById(booking.getUser().getId()).orElse(null);
                     return user != null ? userMapper.toDto(user) : null;
