@@ -4,6 +4,7 @@ import com.booking.menagment.mapper.FlightMapper;
 import com.booking.menagment.model.dto.FlightDTO;
 import com.booking.menagment.model.entity.Booking;
 import com.booking.menagment.model.entity.Flight;
+import com.booking.menagment.model.enums.AirlineEnum;
 import com.booking.menagment.repository.BookingRepository;
 import com.booking.menagment.repository.FlightRepository;
 import com.booking.menagment.service.FlightService;
@@ -13,9 +14,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -69,6 +72,22 @@ public class FlightServiceImpl implements FlightService {
         flightRepository.save(existingFlight);
 
         return flightMapper.toDto(existingFlight);
+    }
+
+    @Override
+    public List<FlightDTO> searchFlights(String origin, String destination, Date flightDate, String airlineCode) {
+        Date currentDate = new Date();
+        if (flightDate.before(currentDate)) {
+            throw new IllegalArgumentException("Flight date cannot be in the past");
+        }
+
+        if (airlineCode != null && !airlineCode.isEmpty()) {
+            List<Flight> flights = flightRepository.findFlightsByOriginAndDestinationAndFlightDateAndAirline(origin, destination, flightDate, AirlineEnum.valueOf(airlineCode));
+            return flights.stream().map(flightMapper::toDto).collect(Collectors.toList());
+        } else {
+            List<Flight> flightList = flightRepository.findFlightsByOriginAndDestinationAndFlightDate(origin, destination, flightDate);
+            return flightList.stream().map(flightMapper::toDto).collect(Collectors.toList());
+        }
     }
 
     @Override

@@ -19,7 +19,7 @@ public class FlightMapper extends AbstractMapper<Flight, FlightDTO>{
     public FlightDTO toDto(Flight flight) {
         FlightDTO flightDTO = new FlightDTO();
         BeanUtils.copyProperties(flight, flightDTO);
-
+        flightDTO.setAirline(flight.getAirline().name());
         return flightDTO;
     }
 }

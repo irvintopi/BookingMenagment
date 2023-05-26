@@ -3,13 +3,11 @@ package com.booking.menagment.handler;
 import jakarta.ws.rs.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.sql.SQLException;
 import java.util.NoSuchElementException;
 
 @RestControllerAdvice
@@ -34,9 +32,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
 
-    /*@ExceptionHandler
-    public ResponseEntity<String> handleNullPointerException(NullPointerException ex){
-        return ResponseEntity.badRequest().body("Check your input, missing required data!");
-    }*/
-
+    @ExceptionHandler
+    public ResponseEntity<String> handleHttpNotReadableException(HttpMessageNotReadableException ex){
+        return ResponseEntity.badRequest().body("Invalid value.");
+    }
 }
