@@ -13,9 +13,9 @@ import java.util.List;
 
 @Data
 @Builder
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 @Table
 public class User implements UserDetails {
 

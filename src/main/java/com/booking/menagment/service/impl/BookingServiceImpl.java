@@ -1,7 +1,9 @@
 package com.booking.menagment.service.impl;
 
 import com.booking.menagment.mapper.BookingMapper;
+import com.booking.menagment.mapper.BookingWithFlightsMapper;
 import com.booking.menagment.model.dto.BookingDTO;
+import com.booking.menagment.model.dto.BookingWithFlightsDTO;
 import com.booking.menagment.model.entity.Booking;
 import com.booking.menagment.model.entity.User;
 import com.booking.menagment.repository.BookingRepository;
@@ -9,9 +11,12 @@ import com.booking.menagment.repository.FlightRepository;
 import com.booking.menagment.repository.UserRepository;
 import com.booking.menagment.service.BookingService;
 import com.booking.menagment.validators.BookingValidator;
+import jakarta.ws.rs.NotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +30,7 @@ public class BookingServiceImpl implements BookingService {
 
     BookingRepository bookingRepository;
     BookingValidator bookingValidator;
+    BookingWithFlightsMapper bookingWithFlightsMapper;
     FlightRepository flightRepository;
     UserRepository userRepository;
     BookingMapper bookingMapper;
@@ -62,4 +68,20 @@ public class BookingServiceImpl implements BookingService {
                     .collect(Collectors.toList());
              }
     }
+
+    @Override
+    public Page<BookingWithFlightsDTO> getUserBookings(String userEmail, int pageNumber) {
+        int pageSize = 5;
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new NotFoundException("User not found with email: " + userEmail));
+
+        Page<Booking> bookingsPage = bookingRepository.findByUserOrderByBookingDateDesc(user , pageRequest);
+        List<BookingWithFlightsDTO> bookingDTOs = bookingsPage.getContent().stream()
+                .map(bookingWithFlightsMapper::toDTOWithFlights)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(bookingDTOs, pageRequest, bookingsPage.getTotalElements());
+    }
+
 }

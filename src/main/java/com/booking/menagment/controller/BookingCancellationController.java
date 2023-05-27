@@ -21,7 +21,7 @@ public class BookingCancellationController {
 
 
     @PreAuthorize("hasRole('ADMIN')")
-    @RequestMapping(method = RequestMethod.POST, value = "/approve/{cancellationId}")
+    @RequestMapping(method = RequestMethod.PUT, value = "/approve/{cancellationId}")
     public ResponseEntity<?> approveCancellationRequest(@PathVariable Integer cancellationId){
         bookingCancellationService.approveCancellation(cancellationId);
         return ResponseEntity.ok("Cancellation approved");
@@ -29,7 +29,7 @@ public class BookingCancellationController {
 
 
     @PreAuthorize("hasRole('ADMIN')")
-    @RequestMapping(method = RequestMethod.POST, value = "/decline")
+    @RequestMapping(method = RequestMethod.PUT, value = "/decline")
     public ResponseEntity<?> declineCancellation(@RequestBody CancellationDeclineDTO declineDTO){
         bookingCancellationService.declineCancellation(declineDTO);
         return ResponseEntity.ok("Cancellation declined");

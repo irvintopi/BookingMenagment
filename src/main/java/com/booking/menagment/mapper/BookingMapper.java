@@ -45,4 +45,6 @@ public class BookingMapper extends AbstractMapper<Booking, BookingDTO>{
         bookingDTO.setFlightClass(booking.getFlightClass());
         return bookingDTO;
     }
+
+
 }
