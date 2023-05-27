@@ -5,6 +5,7 @@ import com.booking.menagment.model.dto.CancellationRequestDTO;
 import com.booking.menagment.service.BookingCancellationService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,25 +19,30 @@ public class BookingCancellationController {
         return ResponseEntity.ok("Cancellation Requested.");
     }
 
+
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(method = RequestMethod.POST, value = "/approve/{cancellationId}")
     public ResponseEntity<?> approveCancellationRequest(@PathVariable Integer cancellationId){
         bookingCancellationService.approveCancellation(cancellationId);
         return ResponseEntity.ok("Cancellation approved");
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/decline/cancellation")
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @RequestMapping(method = RequestMethod.POST, value = "/decline")
     public ResponseEntity<?> declineCancellation(@RequestBody CancellationDeclineDTO declineDTO){
         bookingCancellationService.declineCancellation(declineDTO);
         return ResponseEntity.ok("Cancellation declined");
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(method = RequestMethod.GET, value = "/{status}")
     public ResponseEntity<?> getCancellationsByStatus(@PathVariable String status){
         return ResponseEntity.ok(bookingCancellationService.getRequestsByStatus(status));
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/id/{cancellationId}")
-    public ResponseEntity<?> getCancellationsByStatus(@PathVariable Integer cancellationId){
+    public ResponseEntity<?> getCancellationsById(@PathVariable Integer cancellationId){
         return ResponseEntity.ok(bookingCancellationService.getRequestsById(cancellationId));
     }
 }

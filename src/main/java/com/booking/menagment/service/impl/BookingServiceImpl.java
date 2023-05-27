@@ -10,6 +10,9 @@ import com.booking.menagment.repository.UserRepository;
 import com.booking.menagment.service.BookingService;
 import com.booking.menagment.validators.BookingValidator;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,11 +34,19 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingDTO saveBooking(BookingDTO bookingDTO){
-            bookingValidator.validate(bookingDTO);
-            Booking booking = bookingMapper.toEntity(bookingDTO);
-            bookingRepository.save(booking);
-            return bookingDTO;
+    public BookingDTO saveBooking(BookingDTO bookingDTO) {
+        bookingValidator.validate(bookingDTO);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        if (!username.equals(bookingDTO.getEmail()) ) {
+            throw new IllegalArgumentException("This is not your email, only account owners can make booking.");
+        }
+
+        Booking booking = bookingMapper.toEntity(bookingDTO);
+        bookingRepository.save(booking);
+        return bookingDTO;
     }
 
     @Override

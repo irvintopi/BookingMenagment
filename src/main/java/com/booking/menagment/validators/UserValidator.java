@@ -1,6 +1,8 @@
 package com.booking.menagment.validators;
 
 import com.booking.menagment.model.dto.UserDTO;
+import com.booking.menagment.repository.UserRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Calendar;
@@ -8,7 +10,10 @@ import java.util.Date;
 
 
 @Component
+@AllArgsConstructor
 public class UserValidator {
+
+    UserRepository userRepository;
     private static final int MIN_AGE = 18;
 
     public void validateUser(UserDTO userDTO) {
@@ -32,5 +37,10 @@ public class UserValidator {
         if (!email.matches(emailRegex)) {
             throw new IllegalArgumentException("Invalid email format.");
         }
+        boolean emailExists = userRepository.existsByEmail(email);
+        if (emailExists) {
+            throw new IllegalArgumentException("Email already in use.");
+        }
+
     }
 }

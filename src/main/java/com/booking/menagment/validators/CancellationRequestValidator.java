@@ -7,6 +7,8 @@ import com.booking.menagment.model.enums.CancellationStatusEnum;
 import com.booking.menagment.repository.BookingCancellationRepository;
 import com.booking.menagment.repository.BookingRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -27,6 +29,14 @@ public class CancellationRequestValidator {
         // Check if the booking belongs to the user with the given email
         if (!booking.getUser().getEmail().equals(requestDTO.getEmail())) {
             throw new IllegalArgumentException("Booking does not belong to the user with email: " + requestDTO.getEmail() + ", contact the person who booked the flight!");
+        }
+
+        // Check if authenticated user is sending the request
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        if (!username.equals(requestDTO.getEmail()) ) {
+            throw new IllegalArgumentException("This is not your email, only account owners can request cancellations.");
         }
 
         // Check if the booking is in the past

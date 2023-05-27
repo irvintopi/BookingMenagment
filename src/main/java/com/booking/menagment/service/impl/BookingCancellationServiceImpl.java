@@ -64,8 +64,7 @@ public class BookingCancellationServiceImpl implements BookingCancellationServic
         if (cancellationOptional.isPresent()) {
             Optional<Booking> booking = bookingRepository.findById(cancellationOptional.get().getBookingId());
             BookingCancellation cancellation = cancellationOptional.get();
-            if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN")) ||
-                    booking.get().getUser().getUsername().equals(username)) {
+            if (booking.get().getUser().getUsername().equals(username)) {
                 return cancellationMapper.toDto(cancellation);
             } else {
                 throw new IllegalArgumentException("You are not authorized to view this cancellation.");
@@ -161,7 +160,8 @@ public class BookingCancellationServiceImpl implements BookingCancellationServic
         // Decline request
         cancellation.setStatus(CancellationStatusEnum.DECLINED);
         cancellation.setDeclineReason(declineDTO.getReason());
-        cancellation.setAdminID(admin. get().getId());
+        cancellation.setAdminID(admin.get().getId());
+        cancellationRepository.save(cancellation);
         return cancellation;
     }
 

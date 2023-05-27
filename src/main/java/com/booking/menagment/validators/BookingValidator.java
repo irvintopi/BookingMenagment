@@ -60,7 +60,7 @@ public class BookingValidator {
                 }
 
                 if (!flight.getOrigin().equals(previousFlight.getDestination())) {
-                    throw new IllegalArgumentException("Origin of flight with ID " + flightId + " does not match the destination of the previous flight");
+                    throw new IllegalArgumentException("Connected flights must have same origin to the prior flight.");
                 }
             }
 
@@ -109,6 +109,7 @@ public class BookingValidator {
             }
         }
     }
+
     // Helper method to check if the flight is fully booked
     private boolean isFlightFullyBooked(Flight flight) {
         return flight.getSeatsEconomy() == 0 && flight.getSeatsBusiness() == 0 &&
@@ -130,7 +131,11 @@ public class BookingValidator {
         if (flight.getSeatsPremiumEconomy() >= bookingDTO.getSeatsBooked()) {
             classes.append("ECONOMYPREMIUM, ");
         }
-        return classes.substring(0, classes.length() - 2);
+        if (classes.length() > 2) {
+            return classes.substring(0, classes.length() - 2);
+        } else {
+            return "";
+        }
     }
 }
 
