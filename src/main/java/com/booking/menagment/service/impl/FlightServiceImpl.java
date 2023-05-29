@@ -10,6 +10,7 @@ import com.booking.menagment.repository.FlightRepository;
 import com.booking.menagment.service.FlightService;
 import com.booking.menagment.validators.FlightValidator;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class FlightServiceImpl implements FlightService {
 
     FlightRepository flightRepository;
@@ -31,16 +33,21 @@ public class FlightServiceImpl implements FlightService {
 
     @Override
     public Optional<Flight> findById(Integer id) {
+        log.info("Finding flight by ID: {}", id);
         return flightRepository.findById(id);
     }
 
     @Override
     public FlightDTO save(FlightDTO flightDTO) {
+        log.info("Saving flight: {}", flightDTO);
+
         flightValidator.validateFlight(flightDTO);
 
         try {
             flightRepository.save(flightMapper.toEntity(flightDTO));
+            log.info("Flight saved successfully");
         } catch (DataIntegrityViolationException ex) {
+            log.error("Flight number already exists for the specified flight date", ex);
             throw new IllegalArgumentException("Flight number already exists for the specified flight date.");
         }
 
@@ -49,8 +56,13 @@ public class FlightServiceImpl implements FlightService {
 
     @Override
     public FlightDTO update(Integer flightID, FlightDTO flightDTO) {
+        log.info("Updating flight with ID: {}, new flight details: {}", flightID, flightDTO);
+
         Flight existingFlight = flightRepository.findById(flightID)
-                .orElseThrow(() -> new NoSuchElementException("Flight not found."));
+                .orElseThrow(() -> {
+                    log.error("Flight not found with ID: {}", flightID);
+                    return new NoSuchElementException("Flight not found.");
+                });
 
         // Validate the updated flight DTO
         flightValidator.validateFlight(flightDTO);
@@ -58,6 +70,7 @@ public class FlightServiceImpl implements FlightService {
         // Check if any traveler has booked the flight
         List<Booking> bookings = bookingRepository.findByFlights(existingFlight);
         if (!bookings.isEmpty()) {
+            log.warn("Attempted to modify flight that is booked.");
             throw new IllegalArgumentException("Flight has been booked by travelers. Only departure time can be updated.");
         }
 
@@ -76,6 +89,7 @@ public class FlightServiceImpl implements FlightService {
 
     @Override
     public List<FlightDTO> searchFlights(String origin, String destination, Date flightDate, String airlineCode) {
+
         Date currentDate = new Date();
         if (flightDate.before(currentDate)) {
             throw new IllegalArgumentException("Flight date cannot be in the past");
@@ -92,11 +106,13 @@ public class FlightServiceImpl implements FlightService {
 
     @Override
     public void delete(Integer flightId){
+        log.info("Deleting flight with ID: {}", flightId);
         Flight flight = flightRepository.findById(flightId)
                 .orElseThrow(() -> new NoSuchElementException("Flight not found"));
 
         List<Booking> bookings = bookingRepository.findByFlights(flight);
         if (!bookings.isEmpty()) {
+            log.warn("Attempted to delete flight with existing bookings, with ID: {}", flightId);
             throw new IllegalArgumentException("Cannot delete a flight with existing bookings");
         }
 

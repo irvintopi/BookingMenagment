@@ -1,6 +1,7 @@
 package com.booking.menagment.validators;
 
 import com.booking.menagment.model.dto.FlightDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -8,45 +9,63 @@ import java.util.Calendar;
 import java.util.Date;
 
 @Component
+@Slf4j
 public class FlightValidator {
+
     public void validateFlight(FlightDTO flightDTO) {
+        log.info("Validating flight: {}", flightDTO);
+
         String airlineCode = flightDTO.getAirline();
         String flightNumber = flightDTO.getFlightNumber();
 
-        //airline code
+        // Airline code
         if (!Arrays.asList("LH", "OS", "LX", "EW").contains(airlineCode)) {
-            throw new IllegalArgumentException("Invalid airline code. Allowed airline codes are LH, OS, LX, EW.");
+            String errorMessage = "Invalid airline code. Allowed airline codes are LH, OS, LX, EW.";
+            log.error("Flight validation failed for flight: {}. Error: {}", flightDTO, errorMessage);
+            throw new IllegalArgumentException(errorMessage);
         }
 
         validateFutureDate(flightDTO.getFlightDate());
         validateFutureTime(flightDTO.getFlightDate(), flightDTO.getDepartureTime());
 
         if (!flightNumber.matches("^" + airlineCode + "\\d{3}$")) {
-            throw new IllegalArgumentException("Invalid flight number format. Flight number should start with the airline code followed by three numbers.");
+            String errorMessage = "Invalid flight number format. Flight number should start with the airline code followed by three numbers.";
+            log.error("Flight validation failed for flight: {}. Error: {}", flightDTO, errorMessage);
+            throw new IllegalArgumentException(errorMessage);
         }
 
         if (!flightDTO.getOrigin().matches("^[A-Z]{3}$") || !flightDTO.getDestination().matches("^[A-Z]{3}$")) {
-            throw new IllegalArgumentException("Invalid airport code format on origin or destination. Airport code should consist of three uppercase letters.");
+            String errorMessage = "Invalid airport code format on origin or destination. Airport code should consist of three uppercase letters.";
+            log.error("Flight validation failed for flight: {}. Error: {}", flightDTO, errorMessage);
+            throw new IllegalArgumentException(errorMessage);
         }
 
         if (flightDTO.getOrigin().equals(flightDTO.getDestination())) {
-            throw new IllegalArgumentException("Origin and destination airports cannot be the same.");
+            String errorMessage = "Origin and destination airports cannot be the same.";
+            log.error("Flight validation failed for flight: {}. Error: {}", flightDTO, errorMessage);
+            throw new IllegalArgumentException(errorMessage);
         }
+
+        log.info("Flight validation passed for flight: {}", flightDTO);
     }
 
     private void validateFutureDate(Date date) {
         Date currentDate = new Date();
         if (date.before(currentDate)) {
-            throw new IllegalArgumentException("Flight date must be in the future.");
+            String errorMessage = "Flight date must be in the future.";
+            log.error("Flight date validation failed. Error: {}", errorMessage);
+            throw new IllegalArgumentException(errorMessage);
         }
     }
 
     private void validateFutureTime(Date date, Date time) {
         Date currentDateTime = new Date();
-        Date bookingDateTime = mergeDateAndTime(date, time);
+        Date flightDateTime = mergeDateAndTime(date, time);
 
-        if (bookingDateTime.before(currentDateTime)) {
-            throw new IllegalArgumentException("Departure time must be in the future.");
+        if (flightDateTime.before(currentDateTime)) {
+            String errorMessage = "Departure time must be in the future.";
+            log.error("Departure time validation failed. Error: {}", errorMessage);
+            throw new IllegalArgumentException(errorMessage);
         }
     }
 

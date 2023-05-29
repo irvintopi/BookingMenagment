@@ -1,6 +1,6 @@
 package com.booking.menagment.security.config;
 
-import com.booking.menagment.handler.CustomAccessDeniedHandler;
+import com.booking.menagment.exception.CustomAccessDeniedHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

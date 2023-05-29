@@ -8,6 +8,7 @@ import com.booking.menagment.repository.BookingRepository;
 import com.booking.menagment.repository.FlightRepository;
 import com.booking.menagment.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @Component
 @AllArgsConstructor
+@Slf4j
 public class BookingValidator {
     UserRepository userRepository;
     FlightRepository flightRepository;
@@ -22,6 +24,8 @@ public class BookingValidator {
 
     public void validate(BookingDTO bookingDTO) {
         Integer previousFlightId = null;
+
+        log.info("Validating booking: {}", bookingDTO);
 
         // Check if email exists
         String email = bookingDTO.getEmail();
@@ -60,7 +64,7 @@ public class BookingValidator {
                 }
 
                 if (!flight.getOrigin().equals(previousFlight.getDestination())) {
-                    throw new IllegalArgumentException("Connected flights must have same origin to the prior flight.");
+                    throw new IllegalArgumentException("Connected flights must have the same origin as the previous flight");
                 }
             }
 
@@ -74,7 +78,7 @@ public class BookingValidator {
 
             // Deduction logic for seat class
             if (isFlightFullyBooked(flight)) {
-                throw new IllegalArgumentException("Flight with ID " + flightId + " is fully booked.");
+                throw new IllegalArgumentException("Flight with ID " + flightId + " is fully booked");
             }
 
             String availableClasses = getAvailableClasses(flight, bookingDTO);
@@ -110,13 +114,13 @@ public class BookingValidator {
         }
     }
 
-    // Helper method to check if the flight is fully booked
+    // Helper methods
     private boolean isFlightFullyBooked(Flight flight) {
         return flight.getSeatsEconomy() == 0 && flight.getSeatsBusiness() == 0 &&
                 flight.getSeatsFirstClass() == 0 && flight.getSeatsPremiumEconomy() == 0;
     }
 
-    // Helper method to get the available classes for booking
+
     private String getAvailableClasses(Flight flight, BookingDTO bookingDTO) {
         StringBuilder classes = new StringBuilder();
         if (flight.getSeatsEconomy() >= bookingDTO.getSeatsBooked()) {

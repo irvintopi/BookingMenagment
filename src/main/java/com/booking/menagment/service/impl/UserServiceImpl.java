@@ -10,6 +10,7 @@ import com.booking.menagment.service.BookingService;
 import com.booking.menagment.service.UserService;
 import com.booking.menagment.validators.UserValidator;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,28 +21,32 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
-    private UserRepository userRepository;
-    private UserMapper userMapper;
-    private UserValidator userValidator;
-    private PasswordEncoder passwordEncoder;
-    private BookingService bookingService;
+    UserRepository userRepository;
+    UserMapper userMapper;
+    PasswordEncoder passwordEncoder;
+    BookingService bookingService;
 
     @Override
     public List<UserDTO> findAll() {
-
+        log.info("Fetching all users");
         return userRepository.findAll().stream()
-                .map(userMapper::toDto).sorted(Comparator.comparing(UserDTO::getFirstName)).collect(Collectors.toList());
+                .map(userMapper::toDto)
+                .sorted(Comparator.comparing(UserDTO::getFirstName))
+                .collect(Collectors.toList());
     }
 
     @Override
     public UserDTO findByEmail(String email) {
+        log.info("Finding user by email: {}", email);
         Optional<User> user = userRepository.findByEmail(email);
         return user.map(value -> userMapper.toDto(value)).orElse(null);
     }
 
     @Override
     public User update(String email, User updatedUser) {
+        log.info("Updating user with email: {}", email);
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NoSuchElementException("User does not exist!"));
 
@@ -91,6 +96,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<String> delete(String email) {
+        log.info("Deleting user with email: {}", email);
         Optional<User> userOptional = userRepository.findByEmail(email);
 
         if (userOptional.isPresent() && !userOptional.get().getRole().name().equals("ADMIN")) {
@@ -106,6 +112,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDTO> findUsersOnFlight(Integer flightId) {
+        log.info("Finding users on flight with ID: {}", flightId);
         List<Booking> bookings = bookingService.findByFlightId(flightId);
 
         return bookings.stream()
