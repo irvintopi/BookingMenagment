@@ -1,6 +1,5 @@
 package com.booking.menagment.service;
 
-import com.booking.menagment.model.dto.BookingDTO;
 import com.booking.menagment.model.dto.UserDTO;
 import com.booking.menagment.model.entity.User;
 import org.springframework.http.ResponseEntity;

@@ -44,8 +44,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body("Invalid value.");
     }
 
-    // Add more exception handlers as needed
-
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGenericException(Exception ex) {
         log.error("An exception occurred: {}", ex.getMessage(), ex);

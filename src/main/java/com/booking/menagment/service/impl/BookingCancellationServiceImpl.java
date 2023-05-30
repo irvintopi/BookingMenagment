@@ -205,22 +205,15 @@ public class BookingCancellationServiceImpl implements BookingCancellationServic
         List<Flight> flights = booking.getFlights();
         for (Flight flight : flights) {
             switch (booking.getFlightClass().name()) {
-                case "ECONOMY":
-                    flight.setSeatsEconomy(flight.getSeatsEconomy() + seatsBooked);
-                    break;
-                case "PREMIUMECONOMY":
-                    flight.setSeatsPremiumEconomy(flight.getSeatsPremiumEconomy() + seatsBooked);
-                    break;
-                case "BUSINESS":
-                    flight.setSeatsBusiness(flight.getSeatsBusiness() + seatsBooked);
-                    break;
-                case "FIRSTCLASS":
-                    flight.setSeatsFirstClass(flight.getSeatsFirstClass() + seatsBooked);
-                    break;
-                default:
+                case "ECONOMY" -> flight.setSeatsEconomy(flight.getSeatsEconomy() + seatsBooked);
+                case "PREMIUMECONOMY" -> flight.setSeatsPremiumEconomy(flight.getSeatsPremiumEconomy() + seatsBooked);
+                case "BUSINESS" -> flight.setSeatsBusiness(flight.getSeatsBusiness() + seatsBooked);
+                case "FIRSTCLASS" -> flight.setSeatsFirstClass(flight.getSeatsFirstClass() + seatsBooked);
+                default -> {
                     String errorMessage = "Invalid flight class: " + booking.getFlightClass();
                     log.error("Failed to update seats after cancellation. Error: {}", errorMessage);
                     throw new IllegalArgumentException(errorMessage);
+                }
             }
             flightRepository.save(flight);
         }

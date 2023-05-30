@@ -2,9 +2,6 @@ package com.booking.menagment.mapper;
 
 import com.booking.menagment.model.dto.FlightAccessDTO;
 import com.booking.menagment.model.entity.Flight;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 

@@ -84,32 +84,32 @@ public class BookingValidator {
             String availableClasses = getAvailableClasses(flight, bookingDTO);
 
             switch (bookingDTO.getFlightClass().name()) {
-                case "ECONOMY":
+                case "ECONOMY" -> {
                     if (flight.getSeatsEconomy() < bookingDTO.getSeatsBooked()) {
                         throw new IllegalArgumentException("Not enough available economy seats for flight with ID " + flightId + ". Available classes: " + availableClasses);
                     }
                     flight.setSeatsEconomy(flight.getSeatsEconomy() - bookingDTO.getSeatsBooked());
-                    break;
-                case "BUSINESS":
+                }
+                case "BUSINESS" -> {
                     if (flight.getSeatsBusiness() < bookingDTO.getSeatsBooked()) {
                         throw new IllegalArgumentException("Not enough available business seats for flight with ID " + flightId + ". Available classes: " + availableClasses);
                     }
                     flight.setSeatsBusiness(flight.getSeatsBusiness() - bookingDTO.getSeatsBooked());
-                    break;
-                case "FIRSTCLASS":
+                }
+                case "FIRSTCLASS" -> {
                     if (flight.getSeatsFirstClass() < bookingDTO.getSeatsBooked()) {
                         throw new IllegalArgumentException("Not enough available first class seats for flight with ID " + flightId + ". Available classes: " + availableClasses);
                     }
                     flight.setSeatsFirstClass(flight.getSeatsFirstClass() - bookingDTO.getSeatsBooked());
-                    break;
-                case "ECONOMYPREMIUM":
+                }
+                case "ECONOMYPREMIUM" -> {
                     if (flight.getSeatsPremiumEconomy() < bookingDTO.getSeatsBooked()) {
                         throw new IllegalArgumentException("Not enough available premium economy seats for flight with ID " + flightId + ". Available classes: " + availableClasses);
                     }
                     flight.setSeatsPremiumEconomy(flight.getSeatsPremiumEconomy() - bookingDTO.getSeatsBooked());
-                    break;
-                default:
-                    throw new IllegalArgumentException("Invalid flight class: " + bookingDTO.getFlightClass().name());
+                }
+                default ->
+                        throw new IllegalArgumentException("Invalid flight class: " + bookingDTO.getFlightClass().name());
             }
         }
     }

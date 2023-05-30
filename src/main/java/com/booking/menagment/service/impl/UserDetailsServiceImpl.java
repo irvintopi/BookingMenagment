@@ -1,19 +1,13 @@
 package com.booking.menagment.service.impl;
 
-import com.booking.menagment.model.enums.RoleEnum;
 import com.booking.menagment.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.Collection;
-import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
@@ -39,9 +33,5 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .password(user.getPassword())
                 .roles(user.getRole().name())
                 .build();
-    }
-
-    private Collection<? extends GrantedAuthority> getAuthorities(RoleEnum role) {
-        return Collections.singletonList(new SimpleGrantedAuthority(role.name()));
     }
 }
