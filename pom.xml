@@ -12,7 +12,7 @@
 	<artifactId>menagment</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>menagment</name>
-	<description>Booking Menagment System </description>
+	<description>Flight Menagment System </description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
