@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class UserServiceImpl implements UserService {
     UserRepository userRepository;
-    UserMapper userMapper;
+    final UserMapper userMapper;
     PasswordEncoder passwordEncoder;
     BookingService bookingService;
 
@@ -38,8 +38,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO findByEmail(String email) {
         log.info("Finding user by email: {}", email);
-        Optional<User> user = userRepository.findByEmail(email);
-        return user.map(value -> userMapper.toDto(value)).orElse(null);
+        User user = userRepository.findByEmail(email)
+                .orElse(null);
+        return user != null ? userMapper.toDto(user) : null;
     }
 
     @Override

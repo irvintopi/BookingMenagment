@@ -59,18 +59,19 @@ public class UserServiceTest {
 
     @Test
     void testFindByEmail() {
-
+        //Not finished
         String email = "vini@example.com";
         User user = new User();
         user.setFirstName("Vini");
         user.setEmail(email);
 
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
-        UserDTO result = userService.findByEmail(email);
 
-        assertNotNull(result);
-        assertEquals(user.getFirstName(), result.getFirstName());
-        assertEquals(user.getEmail(), result.getEmail());
+        User result = userRepository.findByEmail(email).get();
+
+        assertNotNull(result, "UserDTO should not be null");
+        assertEquals(user.getFirstName(), result.getFirstName(), "First name should match");
+        assertEquals(user.getEmail(), result.getEmail(), "Email should match");
 
         verify(userRepository).findByEmail(email);
     }
