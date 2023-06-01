@@ -28,7 +28,7 @@ public class UserValidator {
         Date minAgeDate = calendar.getTime();
 
         if (birthday.after(minAgeDate)) {
-            log.error("Validation failed: Forbidden. Travellers younger than 18 can only travel under supervision by a parent or guardian");
+            log.error("Registration failed: Age less than 18");
             throw new IllegalArgumentException("Forbidden. Travellers younger than 18 can only travel under supervision by a parent or guardian");
         }
     }

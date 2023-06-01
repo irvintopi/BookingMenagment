@@ -28,18 +28,21 @@ public class FlightValidator {
         validateFutureDate(flightDTO.getFlightDate());
         validateFutureTime(flightDTO.getFlightDate(), flightDTO.getDepartureTime());
 
+        // Validates flight number format.
         if (!flightNumber.matches("^" + airlineCode + "\\d{3}$")) {
             String errorMessage = "Invalid flight number format. Flight number should start with the airline code followed by three numbers.";
             log.error("Flight validation failed for flight: {}. Error: {}", flightDTO, errorMessage);
             throw new IllegalArgumentException(errorMessage);
         }
 
+        // Validates airport code
         if (!flightDTO.getOrigin().matches("^[A-Z]{3}$") || !flightDTO.getDestination().matches("^[A-Z]{3}$")) {
             String errorMessage = "Invalid airport code format on origin or destination. Airport code should consist of three uppercase letters.";
             log.error("Flight validation failed for flight: {}. Error: {}", flightDTO, errorMessage);
             throw new IllegalArgumentException(errorMessage);
         }
 
+        // Validates origin and destination
         if (flightDTO.getOrigin().equals(flightDTO.getDestination())) {
             String errorMessage = "Origin and destination airports cannot be the same.";
             log.error("Flight validation failed for flight: {}. Error: {}", flightDTO, errorMessage);

@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<String> handleHttpNotReadableException(HttpMessageNotReadableException ex) {
         log.error("HttpMessageNotReadableException occurred: {}", ex.getMessage());
-        return ResponseEntity.badRequest().body("Invalid value.");
+        return ResponseEntity.badRequest().body("Roles, status and classes should be capitalized.");
     }
 
     @ExceptionHandler(Exception.class)
