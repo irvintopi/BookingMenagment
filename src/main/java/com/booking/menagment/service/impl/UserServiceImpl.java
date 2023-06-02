@@ -120,9 +120,8 @@ public class UserServiceImpl implements UserService {
                     User user = userRepository.findById(booking.getUser().getId()).orElse(null);
                     return user != null ? userMapper.toDto(user) : null;
                 })
-                .filter(Objects::nonNull)
+                .filter(Objects::nonNull) //?
                 .collect(Collectors.toList());
     }
-
 
 }

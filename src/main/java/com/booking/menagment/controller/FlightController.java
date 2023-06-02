@@ -28,9 +28,9 @@ public class FlightController {
 
     @GetMapping
     public ResponseEntity<List<FlightDTO>> searchFlights(
-            @RequestParam(required = true) String origin,
-            @RequestParam(required = true) String destination,
-            @RequestParam(required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") Date flightDate,
+            @RequestParam String origin,
+            @RequestParam String destination,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date flightDate,
             @RequestParam(required = false) String airlineCode
     ) {
         return ResponseEntity.ok(flightService.searchFlights(origin, destination, flightDate, airlineCode));
